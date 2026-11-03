@@ -1,0 +1,314 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile with privacy preferences and authentication metadata",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Unique Firebase Authentication UID",
+          "maxLength": 128
+        },
+        "displayName": {
+          "type": "string",
+          "description": "User visible display name",
+          "maxLength": 50
+        },
+        "username": {
+          "type": "string",
+          "description": "Unique CONNECTA username",
+          "pattern": "^[a-zA-Z0-9_]{3,20}$",
+          "maxLength": 20
+        },
+        "usernameLowercase": {
+          "type": "string",
+          "description": "Lowercase normalized username for fast search",
+          "maxLength": 20
+        },
+        "profilePicture": {
+          "type": "string",
+          "description": "Avatar image URL or storage reference"
+        },
+        "bio": {
+          "type": "string",
+          "description": "Short user bio or status message",
+          "maxLength": 160
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update timestamp"
+        },
+        "isOnline": {
+          "type": "boolean",
+          "description": "Real-time presence state"
+        },
+        "lastSeen": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last active timestamp"
+        }
+      },
+      "required": ["userId", "displayName", "username", "usernameLowercase"]
+    },
+    "UsernameReservation": {
+      "title": "UsernameReservation",
+      "description": "Global unique username registry mapping username to UID",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "username": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_]{3,20}$",
+          "maxLength": 20
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["userId", "username"]
+    },
+    "Chat": {
+      "title": "Chat",
+      "description": "One-on-one direct conversation between two users",
+      "type": "object",
+      "properties": {
+        "chatId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "members": {
+          "type": "array",
+          "description": "Array of user IDs participating in the conversation"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastMessage": {
+          "type": "object",
+          "description": "Summary snippet of the latest message"
+        }
+      },
+      "required": ["chatId", "members", "createdAt", "updatedAt"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "Message within a private conversation",
+      "type": "object",
+      "properties": {
+        "messageId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "senderId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 4000
+        },
+        "type": {
+          "type": "string",
+          "enum": ["text", "image", "audio"]
+        },
+        "imageUrl": {
+          "type": "string"
+        },
+        "audioUrl": {
+          "type": "string"
+        },
+        "audioDuration": {
+          "type": "number"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "editedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "readBy": {
+          "type": "array"
+        },
+        "deletedFor": {
+          "type": "array"
+        }
+      },
+      "required": ["messageId", "senderId", "type", "createdAt"]
+    },
+    "CallSession": {
+      "title": "CallSession",
+      "description": "WebRTC voice or video call signaling and session metadata",
+      "type": "object",
+      "properties": {
+        "callId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "callerId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "receiverId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "callType": {
+          "type": "string",
+          "enum": ["voice", "video"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["calling", "ringing", "accepted", "declined", "ended", "missed"]
+        },
+        "offer": {
+          "type": "object",
+          "description": "WebRTC SDP Offer"
+        },
+        "answer": {
+          "type": "object",
+          "description": "WebRTC SDP Answer"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "duration": {
+          "type": "number"
+        }
+      },
+      "required": ["callId", "callerId", "receiverId", "callType", "status", "createdAt"]
+    },
+    "IceCandidate": {
+      "title": "IceCandidate",
+      "description": "WebRTC ICE candidate for peer connection traversal",
+      "type": "object",
+      "properties": {
+        "senderId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "candidate": {
+          "type": "string"
+        },
+        "sdpMid": {
+          "type": "string"
+        },
+        "sdpMLineIndex": {
+          "type": "number"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["senderId", "candidate"]
+    },
+    "BlockRecord": {
+      "title": "BlockRecord",
+      "description": "User block record to prevent incoming calls and messages",
+      "type": "object",
+      "properties": {
+        "blockerId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "blockedUserId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["blockerId", "blockedUserId", "createdAt"]
+    },
+    "ReportRecord": {
+      "title": "ReportRecord",
+      "description": "Abuse or harassment report against a user or message",
+      "type": "object",
+      "properties": {
+        "reportId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "reporterId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "reportedUserId": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "reportedMessageId": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["reportId", "reporterId", "reportedUserId", "reason", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Public user profile and presence state"
+    },
+    "/usernames/{username}": {
+      "schema": "UsernameReservation",
+      "description": "Uniqueness reservation index mapping username to UID"
+    },
+    "/chats/{chatId}": {
+      "schema": "Chat",
+      "description": "Direct chat conversation metadata between two members"
+    },
+    "/chats/{chatId}/messages/{messageId}": {
+      "schema": "Message",
+      "description": "Individual message in a chat"
+    },
+    "/callSessions/{callId}": {
+      "schema": "CallSession",
+      "description": "WebRTC voice/video call session"
+    },
+    "/callSessions/{callId}/candidates/{candidateId}": {
+      "schema": "IceCandidate",
+      "description": "ICE candidate exchange for WebRTC signaling"
+    },
+    "/users/{userId}/blocks/{blockedUserId}": {
+      "schema": "BlockRecord",
+      "description": "Private list of users blocked by this user"
+    },
+    "/reports/{reportId}": {
+      "schema": "ReportRecord",
+      "description": "Private abuse and safety reports submitted by users"
+    }
+  }
+}

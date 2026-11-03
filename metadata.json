@@ -1,0 +1,6 @@
+{
+  "name": "CONNECTA",
+  "description": "Modern, secure native Android messenger with real-time private messaging, WebRTC voice and video calling.",
+  "requestFramePermissions": ["camera", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
